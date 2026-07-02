@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', function () {
       rows.forEach(function (r) {
         r.classList.remove('is-active');
         r.setAttribute('aria-pressed', 'false');
+        var item = r.closest('li');
+        if (item) item.hidden = false;
       });
       if (resetBtn) resetBtn.hidden = true;
     }
@@ -53,6 +55,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var active = r === row;
         r.classList.toggle('is-active', active);
         r.setAttribute('aria-pressed', active ? 'true' : 'false');
+        var item = r.closest('li');
+        if (item) item.hidden = !active;
       });
       if (resetBtn) resetBtn.hidden = false;
     }
@@ -71,5 +75,19 @@ document.addEventListener('DOMContentLoaded', function () {
     if (resetBtn) {
       resetBtn.addEventListener('click', showDefault);
     }
+  }
+
+  var themeToggle = document.getElementById('themeToggle');
+  var rootEl = document.documentElement;
+
+  if(themeToggle) {
+    themeToggle.setAttribute('aria-pressed', rootEl.getAttribute('data-theme') === 'dark' ? 'true' : 'false');
+
+    themeToggle.addEventListener('click', function () {
+      var next = rootEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      rootEl.setAttribute('data-theme', next);
+      themeToggle.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
+      try { localStorage.setItem('spitex-theme', next); } catch(e) {} 
+    });
   }
 });
